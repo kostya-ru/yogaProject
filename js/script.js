@@ -92,12 +92,12 @@ window.addEventListener('DOMContentLoaded', function () {
         overlay = document.querySelector('.overlay'),
         close = document.querySelector('.popup-close');
 
-    more.addEventListener('click', function(){
+    more.addEventListener('click', function () {
         overlay.style.display = 'block';
         this.classList.add('more-splash');
         document.body.style.overflow = 'hidden';
     });
-    close.addEventListener('click', function(){
+    close.addEventListener('click', function () {
         overlay.style.display = 'none';
         more.classList.remove('more-splash');
         document.body.style.overflow = '';
@@ -115,7 +115,7 @@ window.addEventListener('DOMContentLoaded', function () {
         input = form.getElementsByTagName('input'),
         statusMessage = document.createElement('div');
 
-        statusMessage.classList.add('status');
+    statusMessage.classList.add('status');
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -127,21 +127,72 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
         let formData = new FormData(form);
+        console.log(formData);
+
 
         let obj = {};
 
-        formData.forEach(function(value, key){
-                obj[key] = value;
+        formData.forEach(function (value, key) {
+            obj[key] = value;
         });
 
+        console.log(obj);
         let json = JSON.stringify(obj);
 
         request.send(json);
-        
-        request.addEventListener('readystatechange', function(){
-            if(request.readyState < 4) {
+
+        request.addEventListener('readystatechange', function () {
+            if (request.readyState < 4) {
                 statusMessage.textContent = message.loading;
-            } else if (request.readyState = 4 && request.status == 200) {
+            } else if (request.readyState == 4 && request.status == 200) {
+                statusMessage.textContent = message.success;
+            } else {
+                statusMessage.textContent = message.failure;
+            }
+        });
+
+        for (let i = 0; i < input.length; i++) {
+            input[i].value = '';
+        }
+
+    });
+
+
+    // contactForm***********************************
+
+
+    let contactForm = document.getElementById('form'),
+        contactInput = contactForm.getElementsByTagName('input');
+    contactForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        form.appendChild(statusMessage);
+
+        let request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        request.setRequestHeader('Content-Type', 'application/json; charset = utf-8');
+
+
+        let contactFormData = new FormData(contactForm);
+        console.log('contactFormData');
+        console.log(contactFormData);
+
+
+        let obj = {};
+
+        contactFormData.forEach(function (value, key) {
+            obj[key] = value;
+        });
+
+        console.log('obj');
+        console.log(obj);
+        let json = JSON.stringify(obj);
+
+        request.send(json);
+
+        request.addEventListener('readystatechange', function () {
+            if (request.readyState < 4) {
+                statusMessage.textContent = message.loading;
+            } else if (request.readyState == 4 && request.status == 200) {
                 statusMessage.textContent = message.success;
             } else {
                 statusMessage.textContent = message.failure;
