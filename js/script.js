@@ -181,10 +181,10 @@ window.addEventListener('DOMContentLoaded', function () {
     showSlides(slideIndex);
 
     function showSlides(n) {
-        if(n > slides.length){
+        if (n > slides.length) {
             slideIndex = 1;
         }
-        if(n < 1){
+        if (n < 1) {
             slideIndex = slides.length;
         }
         slides.forEach((item) => item.style.display = 'none');
@@ -192,33 +192,71 @@ window.addEventListener('DOMContentLoaded', function () {
         slides[slideIndex - 1].style.display = 'block';
         dots[slideIndex - 1].classList.add('dot-active');
     }
-    
 
-    function plusSlides(n){
+
+    function plusSlides(n) {
         showSlides(slideIndex += n);
     }
 
-    function currentSlide(n){
+    function currentSlide(n) {
         showSlides(slideIndex = n);
     }
 
-    prev.addEventListener('click', function() {
+    prev.addEventListener('click', function () {
         plusSlides(-1);
     });
 
-    next.addEventListener('click', function(){
+    next.addEventListener('click', function () {
         plusSlides(1);
     });
 
-    dotsWrap.addEventListener('click', function(event){
-        let target = event.target;
-        for(let i = 0; i < dots.length + 1; i++){
-            if(target.classList.contains('dot') && target == dots[i-1]){
-                currentSlide(i);
-            }
+    dots.forEach((item, index) => {
+        item.addEventListener('click', () => {
+            currentSlide(index + 1);
+        });
+    });
+
+    //calc****************************
+
+    let persons = document.querySelectorAll('.counter-block-input')[0],
+        restDays = document.querySelectorAll('.counter-block-input')[1],
+        place = document.getElementById('select'),
+        totalValue = document.getElementById('total'),
+        personsSum = 0,
+        daysSum = 0,
+        total = 0;
+
+    totalValue.textContent = 0;
+
+    persons.addEventListener('input', function () {
+        personsSum = +this.value;
+        total = (daysSum * personsSum) * 4000;
+
+        if (restDays.value == '') {
+            totalValue.textContent = 0;
+        } else {
+            totalValue.textContent = total;
         }
     });
 
+    restDays.addEventListener('input', function () {
+        daysSum = +this.value;
+        total = (daysSum * personsSum) * 4000;
 
+        if (persons.value == '') {
+            totalValue.textContent = 0;
+        } else {
+            totalValue.textContent = total;
+        }
+    });
+
+    place.addEventListener('input', function () {
+        if (restDays.value == '' || persons.value == '') {
+            totalValue.textContent = 0;
+        } else {
+            let a = total;
+            totalValue.textContent = a * this.options[this.selectedIndex].value;
+        }
+    });
 
 });
