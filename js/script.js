@@ -1,7 +1,7 @@
 //"use strict";
 //
 window.addEventListener('DOMContentLoaded', function () {
-    'use stict';
+
 
     //tabs
 
@@ -132,17 +132,17 @@ window.addEventListener('DOMContentLoaded', function () {
             elem.appendChild(statusMessage);
             let formData = new FormData(elem);
             let obj = {};
-            formData.forEach(function(value, key){
+            formData.forEach(function (value, key) {
                 obj[key] = value;
             });
             let json = JSON.stringify(obj);
 
             function postData(data) {
-                return new Promise(function(resolve, reject){
+                return new Promise(function (resolve, reject) {
                     let request = new XMLHttpRequest();
                     request.open('POST', 'server.php');
                     request.setRequestHeader('Content-Type', 'application/json; charset = utf-8');
-                    request.onreadystatechange = function(){
+                    request.onreadystatechange = function () {
                         if (request.readyState < 4) {
                             resolve()
                         } else if (request.readyState == 4 && request.status == 200) {
@@ -155,19 +155,70 @@ window.addEventListener('DOMContentLoaded', function () {
                 });
             }
             postData(formData)
-            .then(()=>statusMessage.textContent = message.loading)
-            .then(()=>{
-                statusMessage.textContent = '';
-            })
-            .catch(()=> statusMessage.textContent = message.failure)
-            .then(clearInput(elem));
+                .then(() => statusMessage.textContent = message.loading)
+                .then(() => {
+                    statusMessage.textContent = '';
+                })
+                .catch(() => statusMessage.textContent = message.failure)
+                .then(clearInput(elem));
 
         });
 
-        
+
     }
     sendForm(form);
     sendForm(contactForm);
+
+    //slider**********************************************************
+
+    let slideIndex = 1,
+        slides = document.querySelectorAll('.slider-item'),
+        prev = document.querySelector('.prev'),
+        next = document.querySelector('.next'),
+        dotsWrap = document.querySelector('.slider-dots'),
+        dots = document.querySelectorAll('.dot');
+
+    showSlides(slideIndex);
+
+    function showSlides(n) {
+        if(n > slides.length){
+            slideIndex = 1;
+        }
+        if(n < 1){
+            slideIndex = slides.length;
+        }
+        slides.forEach((item) => item.style.display = 'none');
+        dots.forEach((item) => item.classList.remove('dot-active'));
+        slides[slideIndex - 1].style.display = 'block';
+        dots[slideIndex - 1].classList.add('dot-active');
+    }
+    
+
+    function plusSlides(n){
+        showSlides(slideIndex += n);
+    }
+
+    function currentSlide(n){
+        showSlides(slideIndex = n);
+    }
+
+    prev.addEventListener('click', function() {
+        plusSlides(-1);
+    });
+
+    next.addEventListener('click', function(){
+        plusSlides(1);
+    });
+
+    dotsWrap.addEventListener('click', function(event){
+        let target = event.target;
+        for(let i = 0; i < dots.length + 1; i++){
+            if(target.classList.contains('dot') && target == dots[i-1]){
+                currentSlide(i);
+            }
+        }
+    });
+
+
+
 });
-
-
